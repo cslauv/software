@@ -7,9 +7,10 @@
 #include "Thruster.h"
 
 Thruster::Thruster(byte i, byte p):id(i),pin(p){
-    pinMode(pin, OUTPUT);    // Set pin as output pin
+    //pinMode(pin, OUTPUT);    // Set pin as output pin
+    servo.attach(pin,MIN_PWM,MAX_PWM);
 }
 
-void Thruster::setPwr(byte index, byte x){
-  pwr[index] = x;
+void Thruster::setPWM(byte index, int x){
+  pwmsInput[index] = x;
 }

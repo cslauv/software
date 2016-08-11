@@ -142,17 +142,17 @@ void updateValues(String serialInput){
   if (thrusterID < 0 || thrusterID > 8)
     return;
     
-  byte pwrIndex = serialInput.substring(i1 + 1,i2).toInt();
+  byte pwmsInputIndex = serialInput.substring(i1 + 1,i2).toInt();
   
-  if (pwrIndex < 0 || pwrIndex > 5)
+  if (pwmsInputIndex < 0 || pwmsInputIndex > 5)
     return;
   
-  byte pwr = serialInput.substring(i2+1).toInt();
+  int pwms = serialInput.substring(i2+1).toInt();
   
-  if (pwr < 0 || pwr > 255)
+  if (pwms < 0 || pwms > 255)
     return;
   
-  thrusters[thrusterID - 1].pwr[pwrIndex] = pwr; 
+  thrusters[thrusterID - 1].pwmsInput[pwmsInputIndex] = pwms; 
 }
 
 void turnAllOff(){
@@ -169,47 +169,49 @@ void turnAllOff(){
 // Horizontal and Angular Movement Control
 
 void moveForward(){
-  analogWrite(thrusters[1].pin, thrusters[1].pwr[3]);    // Front Right Side Thruster 
-  analogWrite(thrusters[3].pin, thrusters[3].pwr[3]);    // Rear Left Side Thruster
-  analogWrite(thrusters[5].pin, thrusters[5].pwr[3]);    // Front Left Side Thruster
-  analogWrite(thrusters[7].pin, thrusters[7].pwr[3]);    // Rear Right Side Thruster        
+  thrusters[1].servo.writeMicroseconds(thrusters[1].pwmsInput[0]);
+  //analogWrite(thrusters[1].pin, thrusters[1].pwr[3]);    // Front Right Side Thruster 
+  //analogWrite(thrusters[3].pin, thrusters[3].pwr[3]);    // Rear Left Side Thruster
+  //analogWrite(thrusters[5].pin, thrusters[5].pwr[3]);    // Front Left Side Thruster
+  //analogWrite(thrusters[7].pin, thrusters[7].pwr[3]);    // Rear Right Side Thruster        
 }
 
 void moveBackward(){
-  analogWrite(thrusters[1].pin, thrusters[1].pwr[3]);    // Front Right Side Thruster 
-  analogWrite(thrusters[3].pin, thrusters[3].pwr[3]);    // Rear Left Side Thruster
-  analogWrite(thrusters[5].pin, thrusters[5].pwr[3]);    // Front Left Side Thruster
-  analogWrite(thrusters[7].pin, thrusters[7].pwr[3]);    // Rear Right Side Thruster  
+  thrusters[1].servo.writeMicroseconds(thrusters[1].pwmsInput[1]);
+  //analogWrite(thrusters[1].pin, thrusters[1].pwr[3]);    // Front Right Side Thruster 
+  //analogWrite(thrusters[3].pin, thrusters[3].pwr[3]);    // Rear Left Side Thruster
+  //analogWrite(thrusters[5].pin, thrusters[5].pwr[3]);    // Front Left Side Thruster
+  //analogWrite(thrusters[7].pin, thrusters[7].pwr[3]);    // Rear Right Side Thruster  
 }
 
 void turnLeft(){
-  analogWrite(thrusters[1].pin, thrusters[1].pwr[3]);    // Front Right Side Thruster 
-  analogWrite(thrusters[3].pin, thrusters[3].pwr[3]);    // Rear Left Side Thruster
-  analogWrite(thrusters[5].pin, thrusters[5].pwr[3]);    // Front Left Side Thruster
-  analogWrite(thrusters[7].pin, thrusters[7].pwr[3]);    // Rear Right Side Thruster
+  //analogWrite(thrusters[1].pin, thrusters[1].pwr[3]);    // Front Right Side Thruster 
+  //analogWrite(thrusters[3].pin, thrusters[3].pwr[3]);    // Rear Left Side Thruster
+  //analogWrite(thrusters[5].pin, thrusters[5].pwr[3]);    // Front Left Side Thruster
+  //analogWrite(thrusters[7].pin, thrusters[7].pwr[3]);    // Rear Right Side Thruster
 }
 
 void turnRight(){
-  analogWrite(thrusters[1].pin, thrusters[1].pwr[3]);    // Front Right Side Thruster 
-  analogWrite(thrusters[3].pin, thrusters[3].pwr[3]);    // Rear Left Side Thruster
-  analogWrite(thrusters[5].pin, thrusters[5].pwr[3]);    // Front Left Side Thruster
-  analogWrite(thrusters[7].pin, thrusters[7].pwr[3]);    // Rear Right Side Thruster
+  //analogWrite(thrusters[1].pin, thrusters[1].pwr[3]);    // Front Right Side Thruster 
+  //analogWrite(thrusters[3].pin, thrusters[3].pwr[3]);    // Rear Left Side Thruster
+  //analogWrite(thrusters[5].pin, thrusters[5].pwr[3]);    // Front Left Side Thruster
+  //analogWrite(thrusters[7].pin, thrusters[7].pwr[3]);    // Rear Right Side Thruster
 }
 
 // Control for inside thrusters
 
 void submerge(){
-  analogWrite(thrusters[0].pin, thrusters[0].pwr[4]);    // Front Right Side Thruster
-  analogWrite(thrusters[2].pin, thrusters[2].pwr[4]);    // Rear Left Side Thruster
-  analogWrite(thrusters[4].pin, thrusters[4].pwr[4]);    // Front Left Side Thruster
-  analogWrite(thrusters[6].pin, thrusters[6].pwr[4]);    // Rear Right Side Thruster
+  //analogWrite(thrusters[0].pin, thrusters[0].pwr[4]);    // Front Right Side Thruster
+  //analogWrite(thrusters[2].pin, thrusters[2].pwr[4]);    // Rear Left Side Thruster
+  //analogWrite(thrusters[4].pin, thrusters[4].pwr[4]);    // Front Left Side Thruster
+  //analogWrite(thrusters[6].pin, thrusters[6].pwr[4]);    // Rear Right Side Thruster
 }
 
 void emerge(){
-  analogWrite(thrusters[0].pin, thrusters[0].pwr[5]);    // Front Right Side Thruster
-  analogWrite(thrusters[2].pin, thrusters[2].pwr[5]);    // Rear Left Side Thruster
-  analogWrite(thrusters[4].pin, thrusters[4].pwr[5]);    // Front Left Side Thruster
-  analogWrite(thrusters[6].pin, thrusters[6].pwr[5]);    // Rear Right Side Thruster
+  //analogWrite(thrusters[0].pin, thrusters[0].pwr[5]);    // Front Right Side Thruster
+  //analogWrite(thrusters[2].pin, thrusters[2].pwr[5]);    // Rear Left Side Thruster
+  //analogWrite(thrusters[4].pin, thrusters[4].pwr[5]);    // Front Left Side Thruster
+  //analogWrite(thrusters[6].pin, thrusters[6].pwr[5]);    // Rear Right Side Thruster
 }
 
 void getControllerType(int type){

@@ -1,6 +1,7 @@
 /*
   CSLA ROBOSUB
   Code for remote control of thrusters
+  
 */
 
 #include "PS2X_lib.h"
@@ -50,7 +51,7 @@ int joystick_RY = 0;
 int angle_L = 0;
 int radius_L = 0;
 
-void setup(){
+void setup(){  
   Serial.begin(9600);
   delay(2000);  //added delay to give wireless ps2 module some time to startup, before configuring it
   
@@ -58,15 +59,16 @@ void setup(){
   error = ps2x.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
   
   if(error == 0)
-    Serial.println("Found Controller, configured successful \n");
+    Serial.println("Found Controller, configured successful");
   else if(error == 1)
     Serial.println("No controller found, check wiring, see readme.txt to enable debug. visit www.billporter.info for troubleshooting tips");   
   else if(error == 2)
     Serial.println("Controller found but not accepting commands. see readme.txt to enable debug. Visit www.billporter.info for troubleshooting tips");
   else if(error == 3)
     Serial.println("Controller refusing to enter Pressures mode, may not support it. ");
-    
-  getControllerType(ps2x.readType()); 
+  
+  getControllerType(ps2x.readType());
+  initializeThrusters();
 }
 
 void loop() {
@@ -94,34 +96,25 @@ void loop() {
     
     if(radius_L > 52){
       if(angle_L > 45 && angle_L < 135)
-        moveForward();
+        move(0); // Forward
       else if(angle_L < -45 && angle_L > -135)
-        moveBackward();
+        move(1); // Backward
       else if(angle_L > -45 && angle_L < 45)
-        turnRight();
+        move(3); // Right
       else
-        turnLeft(); 
+        move(2); // Left
     }
     else{
-      turnAllOff();
+      turnOutsideOff();
     }
             
     if(ps2x.Button(PSB_PAD_UP))
-      emerge();
-    if(ps2x.Button(PSB_PAD_DOWN))
-      submerge();    
-    if(ps2x.Button(PSB_L1) || ps2x.Button(PSB_R1)) { //print stick values if either is TRUE
-      Serial.print("Stick Values:");
-      Serial.print(joystick_LY, DEC); //Left stick, Y axis. Other options: LX, RY, RX  
-      Serial.print(",");
-      Serial.print(joystick_LX, DEC); 
-      Serial.print(",");
-      Serial.print(radius_L, DEC); 
-      Serial.print(",");
-      Serial.println(angle_L, DEC); 
-    }
+      move(4);
+    else if(ps2x.Button(PSB_PAD_DOWN))
+      move(5);
+    else
+      turnInsideOff();
   }
-  delay(50);  
 }
 
 /*
@@ -149,84 +142,51 @@ void updateValues(String serialInput){
   
   int pwms = serialInput.substring(i2+1).toInt();
   
-  if (pwms < 0 || pwms > 255)
+  if (pwms < MIN_PWM || pwms > MAX_PWM)
     return;
   
-  thrusters[thrusterID - 1].pwmsInput[pwmsInputIndex] = pwms; 
+  thrusters[thrusterID - 1].setPWM(pwmsInputIndex, pwms); 
+}
+
+void turnOutsideOff(){
+  for (Thruster thruster : thrusters)
+    if (thruster.id % 2 == 0)
+      thruster.servo.writeMicroseconds(DEADBAND);   
+}
+
+void turnInsideOff(){
+  for (Thruster thruster : thrusters)
+    if (thruster.id % 2 != 0)
+      thruster.servo.writeMicroseconds(DEADBAND);          
 }
 
 void turnAllOff(){
-  digitalWrite(thrusters[0].pin, LOW);
-  digitalWrite(thrusters[1].pin, LOW);
-  digitalWrite(thrusters[2].pin, LOW);
-  digitalWrite(thrusters[3].pin, LOW);
-  digitalWrite(thrusters[4].pin, LOW);
-  digitalWrite(thrusters[5].pin, LOW);
-  digitalWrite(thrusters[6].pin, LOW);
-  digitalWrite(thrusters[7].pin, LOW);
+  turnInsideOff();
+  turnOutsideOff();
 }
 
-// Horizontal and Angular Movement Control
 
-void moveForward(){
-  thrusters[1].servo.writeMicroseconds(thrusters[1].pwmsInput[0]);
-  //analogWrite(thrusters[1].pin, thrusters[1].pwr[3]);    // Front Right Side Thruster 
-  //analogWrite(thrusters[3].pin, thrusters[3].pwr[3]);    // Rear Left Side Thruster
-  //analogWrite(thrusters[5].pin, thrusters[5].pwr[3]);    // Front Left Side Thruster
-  //analogWrite(thrusters[7].pin, thrusters[7].pwr[3]);    // Rear Right Side Thruster        
-}
-
-void moveBackward(){
-  thrusters[1].servo.writeMicroseconds(thrusters[1].pwmsInput[1]);
-  //analogWrite(thrusters[1].pin, thrusters[1].pwr[3]);    // Front Right Side Thruster 
-  //analogWrite(thrusters[3].pin, thrusters[3].pwr[3]);    // Rear Left Side Thruster
-  //analogWrite(thrusters[5].pin, thrusters[5].pwr[3]);    // Front Left Side Thruster
-  //analogWrite(thrusters[7].pin, thrusters[7].pwr[3]);    // Rear Right Side Thruster  
-}
-
-void turnLeft(){
-  //analogWrite(thrusters[1].pin, thrusters[1].pwr[3]);    // Front Right Side Thruster 
-  //analogWrite(thrusters[3].pin, thrusters[3].pwr[3]);    // Rear Left Side Thruster
-  //analogWrite(thrusters[5].pin, thrusters[5].pwr[3]);    // Front Left Side Thruster
-  //analogWrite(thrusters[7].pin, thrusters[7].pwr[3]);    // Rear Right Side Thruster
-}
-
-void turnRight(){
-  //analogWrite(thrusters[1].pin, thrusters[1].pwr[3]);    // Front Right Side Thruster 
-  //analogWrite(thrusters[3].pin, thrusters[3].pwr[3]);    // Rear Left Side Thruster
-  //analogWrite(thrusters[5].pin, thrusters[5].pwr[3]);    // Front Left Side Thruster
-  //analogWrite(thrusters[7].pin, thrusters[7].pwr[3]);    // Rear Right Side Thruster
-}
-
-// Control for inside thrusters
-
-void submerge(){
-  //analogWrite(thrusters[0].pin, thrusters[0].pwr[4]);    // Front Right Side Thruster
-  //analogWrite(thrusters[2].pin, thrusters[2].pwr[4]);    // Rear Left Side Thruster
-  //analogWrite(thrusters[4].pin, thrusters[4].pwr[4]);    // Front Left Side Thruster
-  //analogWrite(thrusters[6].pin, thrusters[6].pwr[4]);    // Rear Right Side Thruster
-}
-
-void emerge(){
-  //analogWrite(thrusters[0].pin, thrusters[0].pwr[5]);    // Front Right Side Thruster
-  //analogWrite(thrusters[2].pin, thrusters[2].pwr[5]);    // Rear Left Side Thruster
-  //analogWrite(thrusters[4].pin, thrusters[4].pwr[5]);    // Front Left Side Thruster
-  //analogWrite(thrusters[6].pin, thrusters[6].pwr[5]);    // Rear Right Side Thruster
+void move(byte pwmsIndex){
+  for (Thruster thruster : thrusters)
+    if (thruster.id % 2 == 0 && pwmsIndex >= 0 && pwmsIndex <= 3)                 // Control for outside thrusters
+        thruster.servo.writeMicroseconds(thruster.pwmsInput[pwmsIndex]);
+    else if (thruster.id % 2 != 0 && (pwmsIndex == 4 || pwmsIndex == 5))           // Control for inside thrusters
+        thruster.servo.writeMicroseconds(thruster.pwmsInput[pwmsIndex]);      
 }
 
 void getControllerType(int type){
     switch(type) {
     case 0:
-      Serial.print("Unknown Controller type found ");
+      Serial.println("Unknown Controller type found ");
       break;
     case 1:
-      Serial.print("DualShock Controller found ");
+      Serial.println("DualShock Controller found ");
       break;
     case 2:
-      Serial.print("GuitarHero Controller found ");
+      Serial.println("GuitarHero Controller found ");
       break;
     case 3:
-      Serial.print("Wireless Sony DualShock Controller found ");
+      Serial.println("Wireless Sony DualShock Controller found ");
       break;
    }
 }
@@ -247,4 +207,11 @@ void toggleOn(){
   }
 }
 
+/*
+   Calls initialize method for each thruster
+ */
+void initializeThrusters(){
+  for (Thruster t : thrusters)
+    t.initialize();
+}
 

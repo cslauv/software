@@ -21,8 +21,8 @@ class Thruster{
     Servo servo;
     Thruster(byte id, byte pin);
     void setPWM(byte index, int x);
-    // All thrusters start with max power in the beginning
-    ///byte pwr[6] = {255,255,255,255,255,255};    // {forward,backwards,left,right,submerge,emerge}
+    void initialize();
+    String toString();
     
     /* This is the one we will actually use for the thrusters, the pulse width signal input will range from
     1100 to 1900. 1500 is  */

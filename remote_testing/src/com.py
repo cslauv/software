@@ -6,14 +6,14 @@
 '''
 import serial
 
-ser = serial.Serial('/dev/ttyACM0',9600)
+arduino = serial.Serial('/dev/ttyACM0',9600)
 
 try:
-	while True:
+	while True:		
 		# Get input from user on terminal
-		b = raw_input(">> ")
-		ser.write(b)
-
+		command = raw_input(">> ")
+		arduino.write(command)
+                
 # Keyboard interrupt is CTRL + C
 except KeyboardInterrupt:
 	pass

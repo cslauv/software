@@ -4,8 +4,9 @@
   
 */
 
-#include "PS2X_lib.h"
+#include <PS2X_lib.h>
 #include "Thruster.h"
+#include <Servo.h>
 
 /* 
   Set pins connected to PS2 controller:
@@ -158,15 +159,17 @@ void updateValues(String serialInput){
 }
 
 void turnOutsideOff(){
-  for (Thruster thruster : thrusters)
-    if (thruster.id % 2 == 0)
-      thruster.servo.writeMicroseconds(DEADBAND);   
+  //for (Thruster thruster : thrusters)
+  for(byte i = 0; i < 8; i++)   
+    if (thrusters[i].id % 2 == 0)
+      thrusters[i].servo.writeMicroseconds(DEADBAND);   
 }
 
 void turnInsideOff(){
-  for (Thruster thruster : thrusters)
-    if (thruster.id % 2 != 0)
-      thruster.servo.writeMicroseconds(DEADBAND);          
+  //for (Thruster thruster : thrusters)
+  for(byte i = 0; i < 8; i++)   
+    if (thrusters[i].id % 2 != 0)
+      thrusters[i].servo.writeMicroseconds(DEADBAND);          
 }
 
 void turnAllOff(){
@@ -176,11 +179,12 @@ void turnAllOff(){
 
 
 void move(byte pwmsIndex){
-  for (Thruster thruster : thrusters)
-    if (thruster.id % 2 == 0 && pwmsIndex >= 0 && pwmsIndex <= 3)                 // Control for outside thrusters
-        thruster.servo.writeMicroseconds(thruster.pwmsInput[pwmsIndex]);
-    else if (thruster.id % 2 != 0 && (pwmsIndex == 4 || pwmsIndex == 5))           // Control for inside thrusters
-        thruster.servo.writeMicroseconds(thruster.pwmsInput[pwmsIndex]);      
+  //for (Thruster thruster : thrusters)
+  for(byte i = 0; i < 8; i++)   
+    if (thrusters[i].id % 2 == 0 && pwmsIndex >= 0 && pwmsIndex <= 3)                 // Control for outside thrusters
+        thrusters[i].servo.writeMicroseconds(thrusters[i].pwmsInput[pwmsIndex]);
+    else if (thrusters[i].id % 2 != 0 && (pwmsIndex == 4 || pwmsIndex == 5))           // Control for inside thrusters
+        thrusters[i].servo.writeMicroseconds(thrusters[i].pwmsInput[pwmsIndex]);      
 }
 
 void getControllerType(int type){
@@ -220,7 +224,8 @@ void toggleOn(){
    Calls initialize method for each thruster
  */
 void initializeThrusters(){
-  for (Thruster t : thrusters)
-    t.initialize();
+  //for (Thruster t : thrusters)
+   for(byte i = 0; i < 8; i++)   
+      thrusters[i].initialize();
 }
 

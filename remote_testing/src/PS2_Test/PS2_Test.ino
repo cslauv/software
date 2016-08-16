@@ -54,21 +54,30 @@ int radius_L = 0;
 void setup(){  
   Serial.begin(9600);
   delay(2000);  //added delay to give wireless ps2 module some time to startup, before configuring it
+
+  Serial.print("------ STARTING SUB -----\n");
+  Serial.print("------ CONFIGURING PS2 CONTROL -----\n");
   
   //setup pins and settings: GamePad(clock, command, attention, data, Pressures?, Rumble?) check for error
   error = ps2x.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
   
   if(error == 0)
-    Serial.println("Found Controller, configured successful");
+    Serial.print("Found Controller, configured successful\n");
   else if(error == 1)
-    Serial.println("No controller found, check wiring, see readme.txt to enable debug. visit www.billporter.info for troubleshooting tips");   
+    Serial.print("No controller found, check wiring, see readme.txt to enable debug. visit www.billporter.info for troubleshooting tips\n");   
   else if(error == 2)
-    Serial.println("Controller found but not accepting commands. see readme.txt to enable debug. Visit www.billporter.info for troubleshooting tips");
+    Serial.print("Controller found but not accepting commands. see readme.txt to enable debug. Visit www.billporter.info for troubleshooting tips\n");
   else if(error == 3)
-    Serial.println("Controller refusing to enter Pressures mode, may not support it. ");
-  
+    Serial.print("Controller refusing to enter Pressures mode, may not support it.\n");
+
   getControllerType(ps2x.readType());
+  Serial.print("------------------------------------\n");
+
+  Serial.print("----- INITIALIZING THRUSTERS -----\n");    
   initializeThrusters();
+  Serial.print("Initialization Complete\n");
+  Serial.print("Press START to enable thrusters\n");
+  Serial.print("----------------------------------\n");
 }
 
 void loop() {
@@ -81,7 +90,7 @@ void loop() {
     if(ps2x.ButtonReleased(PSB_START))
         toggleOn();
     if(start == false)
-      return;
+       return;
     
     if (Serial.available())
       updateValues(Serial.readString()); 
@@ -123,7 +132,7 @@ void loop() {
   thrusterid:pwrid:pwr(1:0:0)  <--- This would mean give thruster 1 no foward thrust
 */
 void updateValues(String serialInput){
-  
+    
   byte i1 = serialInput.indexOf(':');
   byte i2 = serialInput.lastIndexOf(':');
   
@@ -177,16 +186,16 @@ void move(byte pwmsIndex){
 void getControllerType(int type){
     switch(type) {
     case 0:
-      Serial.println("Unknown Controller type found ");
+      Serial.print("Unknown Controller type found\n");
       break;
     case 1:
-      Serial.println("DualShock Controller found ");
+      Serial.print("DualShock Controller found\n");
       break;
     case 2:
-      Serial.println("GuitarHero Controller found ");
+      Serial.print("GuitarHero Controller found\n");
       break;
     case 3:
-      Serial.println("Wireless Sony DualShock Controller found ");
+      Serial.print("Wireless Sony DualShock Controller found\n");
       break;
    }
 }
@@ -198,12 +207,12 @@ void getControllerType(int type){
 void toggleOn(){
   if (start){
     start = false;
-    Serial.println("THRUSTERS DISABLED");
+    Serial.print("THRUSTERS DISABLED\n");
     turnAllOff();
   }
   else{
     start = true;
-    Serial.println("THRUSTERS ENABLED");
+    Serial.print("THRUSTERS ENABLED\n");
   }
 }
 

@@ -24,7 +24,7 @@ void Thruster::initialize(){
 // This will be used to display all values of thruster when ever a pwm value is changed
 String Thruster::toString(){
   String comma(", ");
-  return String("THRUSTER ") + id + String("PWM VALUES: ") + pwmsInput[0] + comma + pwmsInput[1] + comma + pwmsInput[2] + comma + pwmsInput[3] + comma + pwmsInput[4] + comma + pwmsInput[5];
+  return String("THRUSTER ") + id + String(" PWM VALUES: ") + pwmsInput[0] + comma + pwmsInput[1] + comma + pwmsInput[2] + comma + pwmsInput[3] + comma + pwmsInput[4] + comma + pwmsInput[5];
 }
 
 

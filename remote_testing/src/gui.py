@@ -64,12 +64,13 @@ def update_console():
 
 	count = 0
 	while True:
+		canvas.yview_moveto(1.0)
 		data = arduino.readline()
 		if data:
         		label = Label(frame, text = data.strip(),justify="left",fg = "#ffd700",bg="#000000", font=("Courier",10),wraplength=700)
         		label.grid(row=count, column=0, padx = 0, pady = 0,sticky="w")
+			canvas.yview_moveto(1.0)
 			count += 1
-			#print data
 
 
 label = Label(top, text = "CSLAUV TESTING UTILITY", justify="center",fg = "#F8F8FF",bg="#353839", font=("Courier",20,"bold"))

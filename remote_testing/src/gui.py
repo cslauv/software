@@ -27,8 +27,10 @@ def create_frame(thrusterName, r, c):
 	pwm_option.grid(row = r, column = c+1)
 	var.set("forward") # initial value
 
-	entry = Entry(thrusterFrame,bd=5)
+	entry = Entry(thrusterFrame,bd=5, justify=CENTER)
 	entry.grid(row=r,column= c+2)
+	entry.insert(END, 1500)
+
 
 	button = Button(master=thrusterFrame, text='UPDATE', command= lambda: send_command(r - 3,var.get(),entry.get()))
 	button.grid(row=r,column= c+3)

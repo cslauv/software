@@ -11,6 +11,7 @@ import cv2
 
 debug_mode = True  # if debug_mode is on, print debug message
 camera_value = 0    # select camera here
+contour_thickness = 2   # -1 to fill in shape, integer values only
 camera = cv2.VideoCapture(camera_value)
 
 while True:
@@ -41,39 +42,39 @@ while True:
         if len(approx)==3:
             if debug_mode:
                 print "triangle"
-            cv2.drawContours(overlay,[cnt],0,(0,0,255),-1)      # red for triangle
+            cv2.drawContours(overlay,[cnt],0,(0,0,255),contour_thickness)      # red for triangle
         elif len(approx)==4:
             if debug_mode:
                 print "square"
-            cv2.drawContours(overlay,[cnt],0,(0,165,255),-1)    # orange for square
+            cv2.drawContours(overlay,[cnt],0,(0,165,255),contour_thickness)    # orange for square
         elif len(approx)==5:
             if debug_mode:
                 print "pentagon"
-            cv2.drawContours(overlay,[cnt],0,(0,255,255),-1)    # yellow for pentagon
+            cv2.drawContours(overlay,[cnt],0,(0,255,255),contour_thickness)    # yellow for pentagon
         elif len(approx)==6:
             if debug_mode:
                 print "hexagon"
-            cv2.drawContours(overlay,[cnt],0,(47,255,173),-1)   # light green for hexa
+            cv2.drawContours(overlay,[cnt],0,(47,255,173),contour_thickness)   # light green for hexa
         elif len(approx)==7:
             if debug_mode:
                 print "heptagon"
-            cv2.drawContours(overlay,[cnt],0,(0,153,153),-1)    # dark green for hepta
+            cv2.drawContours(overlay,[cnt],0,(0,153,153),contour_thickness)    # dark green for hepta
         elif len(approx)==8:
             if debug_mode:
                 print "octagon"
-            cv2.drawContours(overlay,[cnt],0,(226,43,138),-1)      # purple for octogon
+            cv2.drawContours(overlay,[cnt],0,(226,43,138),contour_thickness)      # purple for octogon
         elif len(approx) == 9:
             if debug_mode:
                 print "nonagon"
-            cv2.drawContours(overlay,[cnt],0,(255,255,0),-1)    # cyan for 9 sided
+            cv2.drawContours(overlay,[cnt],0,(255,255,0),contour_thickness)    # cyan for 9 sided
         elif len(approx) == 10:
             if debug_mode:
                 print "nonagon"
-            cv2.drawContours(overlay,[cnt],0,(255,0,0),-1)    # blue for star
+            cv2.drawContours(overlay,[cnt],0,(255,0,0),contour_thickness)    # blue for star
         elif len(approx) > 16:
             if debug_mode:
                 print "circle"
-            cv2.drawContours(overlay,[cnt],0,(128,128,128),-1)  # gray for circle
+            cv2.drawContours(overlay,[cnt],0,(128,128,128),contour_thickness)  # gray for circle
     
     # display result
     cv2.imshow('original', frame)   # original

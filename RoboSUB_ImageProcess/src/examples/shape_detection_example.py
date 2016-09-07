@@ -6,28 +6,14 @@ This example program is used to detect shapes from an image
 @author: Hong Luu
 '''
 
-# import numpy as np
-# import cv2
-# im = cv2.imread("../resources/shapes.jpg")
-# imgray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
-# ret,thresh = cv2.threshold(imgray,127,255,0)
-# im2, contours, hierarchy = cv2.findContours(
-#     thresh.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-# 
-# cv2.imshow("shapes", im)
-# cv2.imshow("gray", imgray)
-# cv2.imshow("im2", im2)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
-
 import numpy as np
 import cv2
 
-img = cv2.imread('../resources/black-and-white-shapes.png')
-gray = cv2.imread('../resources/black-and-white-shapes.png',0)
+# img = cv2.imread('../resources/black-and-white-shapes.png')
+# gray = cv2.imread('../resources/black-and-white-shapes.png',0)
 
-# img = cv2.imread('../resources/shapes.jpg')
-# gray = cv2.imread('../resources/shapes.jpg',0)
+img = cv2.imread('../resources/roboSUB_office.jpg')
+gray = cv2.imread('../resources/roboSUB_office.jpg',0)
 
 ret,thresh = cv2.threshold(gray,127,255,0)
 

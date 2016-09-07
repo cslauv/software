@@ -8,14 +8,14 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as matplot
 
-video = cv2.VideoCapture(1)
+camera = cv2.VideoCapture(1)
 underwater_color = (255, 0, 0)
 
 while True:
     print "still going"
     
     # get feed
-    frame = video.read()[1]
+    frame = camera.read()[1]
     
     # get dimensions of original feed
     img_height, img_width, img_channel = frame.shape
@@ -51,6 +51,6 @@ while True:
     
 # close windows
 cv2.destroyAllWindows()
-video.release()
+camera.release()
 
 print "done"
